@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          41.5261554,
+          -5.7323752
+        ]
+      },
+      "properties": {
+        "Marca temporal": "11/05/2025 23:14:33",
+        "OPERADOR": "VODAFONE",
+        "INTENSIDAD (dBm)": -110,
+        "LOCALIZACION": "41.5261554,-5.7323752"
+      }
+    }
+  ]
+}

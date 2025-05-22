@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          41.51231568715742,
+          -5.734962035326569
+        ]
+      },
+      "properties": {
+        "Marca temporal": "12/05/2025 17:21:27",
+        "OPERADOR": "Lowi",
+        "INTENSIDAD (dBm)": -90,
+        "LOCALIZACION": "41.51231568715742,-5.734962035326569"
+      }
+    }
+  ]
+}
