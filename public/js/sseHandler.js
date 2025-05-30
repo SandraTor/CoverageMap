@@ -1,12 +1,18 @@
 // js/sseHandler.js
-const source = new EventSource('sse.php');
-source.addEventListener('update', e => {
-  const changedFiles = JSON.parse(e.data);
-  console.log('[SSE] Archivos actualizados:', changedFiles);
-  changedFiles.forEach(loadGeoJSON);
-});
 
-// Inicializar con capas conocidas o cargar desde listado si hay endpoint PHP
-fetch('api/list_geojson.php')
-  .then(res => res.json())
-  .then(files => loadInitialGeoJSON(files));
+import { updateLayerList } from './mapLayers.js';
+
+const eventSource = new EventSource('/api/sse.php');
+
+eventSource.onmessage = (event) => {
+  try {
+    const archivos = JSON.parse(event.data); // ['archivo1.geojson', 'archivo2.geojson']
+    const geojsonFiles = archivos
+      .filter(name => name.endsWith('.geojson'))
+      .map(name => decodeURIComponent(name.replace(/^.*\//, ''))); // Sanitiza nombres
+
+    updateLayerList(geojsonFiles);
+  } catch (e) {
+    console.error('Error procesando datos SSE:', e);
+  }
+};

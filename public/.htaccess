@@ -1,0 +1,47 @@
+# Habilitar redirección limpia
+RewriteEngine On
+RewriteBase /covermap/public/
+
+# Forzar que solo accedan a archivos dentro de /public
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Excluir rutas como /api/sse.php explícitamente
+RewriteCond %{REQUEST_URI} !^/api/sse\.php$ [NC]
+RewriteCond %{REQUEST_URI} !^/data/? [NC]
+
+# Redirigimos todo lo que se solicite y no exista a index, excluyendo el propio index
+RewriteCond %{REQUEST_URI} !index\.html$ [NC]
+RewriteRule ^ index.html [L]
+
+# Proteger .htaccess
+<Files .htaccess>
+  Order allow,deny
+  Deny from all
+</Files>
+
+# Permitir solo acceso AJAX a archivos PHP / solo desde peticiones de mi codigo
+# <FilesMatch "\.php$">
+#     SetEnvIfNoCase X-Requested-With "XMLHttpRequest" is_ajax
+#     Order Deny,Allow
+#     Deny from all
+#     Allow from env=is_ajax
+#  </FilesMatch>
+
+# Protección contra listado de directorios
+# Options -Indexes
+
+# Soporte para archivos JSON y CORS
+# <FilesMatch "\.(geojson|json)$">
+#    Header set Access-Control-Allow-Origin "*"
+#    Header set Content-Type "application/json"
+# </FilesMatch>
+
+# Redirección 404 personalizada (opcional)
+# ErrorDocument 404 /404.html
+
+# Bloquear el acceso directo a ficheros con las extensiones especificadas
+<FilesMatch "(\.sh|\.py)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>

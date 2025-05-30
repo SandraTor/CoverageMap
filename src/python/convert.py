@@ -49,7 +49,7 @@ def log_warning(message):
 def save_geojson(df, capa_name):
     features = []
     for _, row in df.iterrows():
-        # Parsear la columna de LOCALIZACION en formato "(long,lat)"
+        # Parsear la columna de LOCALIZACION en formato "(long,lat)", ojo en el csv el orden que aparece es lat,long
         coord_str = str(row["LOCALIZACION"]).strip("() ") #cast a string porque pandas interpretaba como float
         if "," not in coord_str:
             warning_msg = f"Coordenadas inválidas: '{coord_str}' en capa '{capa_name}'. Saltando fila."
@@ -58,7 +58,7 @@ def save_geojson(df, capa_name):
             continue
 
         try:
-            lon_str, lat_str = coord_str.split(",")
+            lat_str,lon_str = coord_str.split(",")
             lon = float(lon_str.strip())
             lat = float(lat_str.strip())
         except ValueError:
@@ -86,8 +86,13 @@ def save_geojson(df, capa_name):
     }
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(os.path.join(OUTPUT_DIR, f"{capa_name}.geojson"), "w") as f:
+    file_path = os.path.join(OUTPUT_DIR, f"{capa_name}.geojson")
+
+    with open(file_path, "w") as f:
         json.dump(geojson, f, indent=2)
+
+    # Imprimir la ruta del archivo generado
+    print(f"[OK] Archivo guardado en: {file_path}")
 
 # === Proceso principal ===
 def main():
@@ -103,7 +108,7 @@ def main():
         print("[INFO] Cambios detectados. Procesando...")
         df = pd.read_csv(StringIO(content.decode("utf-8")))
 
-        # Suponemos que hay una columna "capa" que separa los datos
+        # Separamos datos por columna OPERADOR
         for capa in df["OPERADOR"].unique():
             df_capa = df[df["OPERADOR"] == capa]
             save_geojson(df_capa, capa)
