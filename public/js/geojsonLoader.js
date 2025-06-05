@@ -45,17 +45,122 @@ function styleFeature(feature) {
     fillOpacity: 0.8
   };
 }
+/**
+ * Creates a custom circular div icon for Leaflet markers.
+ * @param {string} color - The fill color for the circle.
+ * @returns {L.DivIcon} - A Leaflet div icon representing a colored circle.
+ */
+function createCircleIcon(color) {
+  return L.divIcon({
+    className: 'custom-circle-marker',
+    html: `<span style="
+      display: block;
+      width: 16px;
+      height: 16px;
+      background: ${color};
+      border: 2px solid #333;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      "></span>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+    popupAnchor: [0, -8]
+  });
+}
+
+/**
+ * Given GeoJSON data, returns an array of L.Marker objects.
+ * @param {Object} data - GeoJSON data
+ * @returns {L.Marker[]}
+ */
+export function getMarkersForGeoJSONLayer(data, layerName) {
+  const markers = [];
+  L.geoJSON(data, {
+    pointToLayer: (feature, latlng) => {
+      const intensidad = parseFloat(feature.properties.Intensidad);
+      const color = getColorByIntensidad(intensidad);
+      const marker = L.marker(latlng, { icon: createCircleIcon(color) });
+      const date = feature.properties.date || feature.properties.fecha || feature.properties.Date || '';
+      let popupHtml = `<strong>Operador:</strong> ${layerName.replace(/\.geojson$/i, '')}`;
+      if (layerName) {
+        popupHtml += `<br><strong>Intensidad:</strong> ${intensidad} dBm`;
+      }
+      if (date) {
+        popupHtml += `<br><strong>Fecha:</strong> ${date}`;
+      }
+      marker.bindPopup(popupHtml);
+      markers.push(marker);
+      return marker;
+    }
+  });
+  return markers;
+}
 
 /*
   Carga del fichero geojson y dibujo de los puntos en el mapa como capa
 */
-export function loadGeoJSONLayer(data) {
+/* export function loadGeoJSONLayer(data) {
   return L.geoJSON(data, {
     pointToLayer: (feature, latlng) => {
       const intensidad = parseFloat(feature.properties.Intensidad);
       const color = getColorByIntensidad(intensidad);
-      return L.circleMarker(latlng, styleFeature(feature))
+      return L.marker(latlng, { icon: createCircleIcon(color) })
         .bindPopup(`<strong>Intensidad:</strong> ${intensidad} dBm`);
     }
   });
+} */
+/**
+ * Loads GeoJSON data as clustered and spiderfied markers.
+ * @param {Object} data - GeoJSON data
+ * @param {L.Map} map - Leaflet map instance
+ * @returns {L.MarkerClusterGroup} - The cluster group layer
+ */
+/* export function loadGeoJSONLayerWithClusterAndSpiderfier(data, map) {
+  // Create a marker cluster group
+  const markerClusterGroup = L.markerClusterGroup();
+
+  // Robustly detect the OMS constructor
+  let OMSConstructor = null;
+  if (typeof window.OverlappingMarkerSpiderfier === 'function') {
+    OMSConstructor = window.OverlappingMarkerSpiderfier;
+  } else if (
+    typeof window.OverlappingMarkerSpiderfier === 'object' &&
+    typeof window.OverlappingMarkerSpiderfier.OverlappingMarkerSpiderfier === 'function'
+  ) {
+    OMSConstructor = window.OverlappingMarkerSpiderfier.OverlappingMarkerSpiderfier;
+  } else {
+    console.error(
+      '[OMS] OverlappingMarkerSpiderfier is not available as a constructor. ' +
+      'Check that the correct OMS script is loaded (leaflet-oms.min.js from jawj/OverlappingMarkerSpiderfier-Leaflet). ' +
+      'window.OverlappingMarkerSpiderfier:', window.OverlappingMarkerSpiderfier
+    );
+    throw new Error('OverlappingMarkerSpiderfier is not available as a constructor.');
+  }
+
+  // Initialize OverlappingMarkerSpiderfier on the map
+  const oms = new OMSConstructor(map);
+
+  // Create markers and add to cluster group and OMS
+  L.geoJSON(data, {
+    pointToLayer: (feature, latlng) => {
+      const intensidad = parseFloat(feature.properties.Intensidad);
+      const color = getColorByIntensidad(intensidad);
+      const marker = L.marker(latlng, { icon: createCircleIcon(color) });
+      marker.bindPopup(`<strong>Intensidad:</strong> ${intensidad} dBm`);
+      markerClusterGroup.addLayer(marker);
+      oms.addMarker(marker);
+      return marker;
+    }
+  });
+
+  // Optionally, handle spiderfy/unspiderfy events for custom UI
+  // oms.addListener('spiderfy', function(markers) { ... });
+  // oms.addListener('unspiderfy', function(markers) { ... });
+
+  return markerClusterGroup;
 }
+ */
+// Usage example in your main map code:
+// import { loadGeoJSONLayerWithClusterAndSpiderfier } from './geojsonClusterSpiderfierLoader';
+// const clusterLayer = loadGeoJSONLayerWithClusterAndSpiderfier(geojsonData, map);
+// map.addLayer(clusterLayer);
