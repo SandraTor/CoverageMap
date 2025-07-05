@@ -1,0 +1,19 @@
+footer {
+  background: var(--color-secundario);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  position: relative;
+  /* Onda invertida para el pie */
+  clip-path: polygon(
+    0% 0%, 
+    25% 5%, 
+    50% 15%, 
+    75% 5%, 
+    100% 15%, 
+    100% 100%, 
+    0% 100%
+  );
+  margin-top: 1rem;
+  font-size: clamp(0.8rem, 1vw, 1rem);
+}

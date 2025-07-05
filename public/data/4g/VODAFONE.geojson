@@ -1,0 +1,61 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.7323752,
+          41.5261554
+        ]
+      },
+      "properties": {
+        "Marca temporal": "11/05/2025 23:14:33",
+        "Intensidad 4G": -110
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.7459817,
+          41.5138608
+        ]
+      },
+      "properties": {
+        "Marca temporal": "30/05/2025 13:59:28",
+        "Intensidad 4G": -99
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.718592,
+          41.6579584
+        ]
+      },
+      "properties": {
+        "Marca temporal": "6/06/2025 12:42:55",
+        "Intensidad 4G": -106
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.7442304,
+          41.5039488
+        ]
+      },
+      "properties": {
+        "Marca temporal": "6/06/2025 12:44:24",
+        "Intensidad 4G": -108
+      }
+    }
+  ]
+}

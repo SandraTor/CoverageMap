@@ -1,0 +1,46 @@
+@import url("components/header.css");
+@import url("components/footer.css");
+@import url("components/nav.css");
+
+/* Variables de color */
+:root {
+  --color-primario: #3498db;     /* Azul río */
+  --color-secundario: #27ae60; /* Verde natural */
+  --color-terciario: #e67e22;   /* Naranja señal */
+  --color-hover: #e65022;
+  --color-fondo: #f8f9fa;      /* Fondo claro */
+  --color-texto: #2c3e50;      /* Gris oscuro */
+}
+
+html{
+  font-size: 16px;
+}
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+main {
+  /*max-width: 900px;*/
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+#header {
+  flex: 0 0 auto; /* Allow header and footer to take their natural height */
+  background-color: var(--color-terciario); /* Example background color */
+  color: white;
+  text-align: center;
+}
+
+#footer {
+  position: relative;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-terciario); /* Example background color */
+  color: white;
+  text-align: center;
+}

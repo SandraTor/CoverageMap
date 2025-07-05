@@ -1,6 +1,6 @@
 // js/sseHandler.js
 
-import { updateLayerList } from './mapLayers.js';
+import { updateLayerList } from './map/mapLayers.js';
 
 const eventSource = new EventSource('/api/sse.php');
 

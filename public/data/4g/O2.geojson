@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.7409536,
+          41.5039488
+        ]
+      },
+      "properties": {
+        "Marca temporal": "30/05/2025 13:56:26",
+        "Intensidad 4G": -112
+      }
+    }
+  ]
+}

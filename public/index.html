@@ -3,22 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapa de Cobertura</title>
+  <title>RurAirMap</title>
   <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
   <link rel="shortcut icon" href="/favicon/favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
   <link rel="manifest" href="/favicon/site.webmanifest" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/map.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div id="map"></div>
-  <div id="layerControl">  <!-- Checkboxes de control de layers -->
-  <div id="legend"></div> 
-</div>
+  <div id="header"><!-- Header content will be loaded here --></div>
+  <div id="nav"><!-- Nav content will be loaded here --></div>
+
+  <div id="map" style="min-height: 65vh; width: 100%;">
+    <div id="layerControl">  <!-- Checkboxes de control de layers -->
+      <select id="categorySelect">
+      </select>
+      <div id="legend"></div> 
+    </div>
+  </div>
+  <div id="footer"><!-- Footer content will be loaded here --></div>
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>-->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
@@ -26,13 +34,15 @@
     <!-- In your HTML, before your JS modules -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+   
   <script type="module">
-    import './js/map.js';
-    import './js/mapLayers.js';
-    import { fetchAvailableLayers } from './js/mapLayers.js';
-
-    fetchAvailableLayers();
+    import './js/map/map.js';
+    import './js/map/mapLayers.js';
   </script>
   <script type="module" src="./js/sseHandler.js"></script>
+  <!-- Scripts plantilla base -->
+  <script src="js/main.js"></script>
+  <script src="js/components/menu-toggle.js"></script>
+
 </body>
 </html>

@@ -1,0 +1,33 @@
+header {
+  background: var(--color-primario);
+  color: white;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  clip-path: ellipse(100% 100% at 50% 0%);
+}
+
+header h1 {
+  margin: 0;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+header h2 {
+  margin: 0;
+  font-size: clamp(1rem, 2.5vw, 1.8rem);
+  font-weight: 500;
+}
+
+header img {
+  margin: 0.5rem;
+  height: 5rem; /* similar al tamaño de fuente */
+  width: auto; /* mantiene la proporción */
+  border-radius: 0.7rem; /* esquinas redondeadas */
+  background-color: white; /* fondo si es transparente */
+  object-fit: contain;
+}
