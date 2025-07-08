@@ -52,41 +52,30 @@ function clearCheckboxes() {
 
 // --- UI: Genera la lista checkbox para las capas ---
 // Actualiza la lista de capa con los checkboxes
-export function updateLayerList(files) {
+export function updateLayerList(files, category) {
   validFiles = files;
   clearCheckboxes();
   const container = document.createElement('div');
   container.id = 'checkboxesContainer';
-  files.forEach(file => {
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.id = `layer-${file}`;
-    checkbox.dataset.filename = file;
+
+  const useRadio = (category === 'air_pollution');
+
+  files.forEach((file, idx) => {
+    const input = document.createElement('input');
+    input.type = useRadio ? 'radio' : 'checkbox';
+    input.name = useRadio ? 'layer-radio' : undefined;
+    input.id = `layer-${file}`;
+    input.dataset.filename = file;
+
+    // Listener común (se adapta más abajo)
+    input.addEventListener('change', changeHandler);
 
     const label = document.createElement('label');
-    label.htmlFor = checkbox.id;
+    label.htmlFor = input.id;
     label.textContent = file.replace(/\.geojson$/i, '');
 
-    checkbox.addEventListener('change', async e => {
-      const filename = e.target.dataset.filename;
-      if (!validFiles.includes(filename)) return;
-      if (e.target.checked) {
-        try {
-          const res = await fetch(`/data/${filename}`);
-          const data = await res.json();
-          const markers = getMarkersForGeoJSONLayer(data, filename);
-          geojsonLayers[filename] = markers;
-          clusterGroup.addLayers(markers);
-          markers.forEach(m => oms.addMarker(m));
-        } catch (error) {
-          console.error('Error fetching or parsing geojson data:', error);
-        }
-      } else {
-        removeLayerMarkers(filename);
-      }
-    });
     const row = document.createElement('div');
-    row.append(checkbox, label);
+    row.append(input, label);
     container.append(row);
   });
   layerControlContainer.append(container);
@@ -96,6 +85,30 @@ export function updateLayerList(files) {
   if (existingBtn) existingBtn.remove();
 
   addRefreshLayersButton();
+}
+ //Comportamiento unificado para radio button y checkboxes
+async function changeHandler(e) {
+  const filename = e.target.dataset.filename;
+  const isRadio = e.target.type === 'radio';
+
+  if (isRadio) {
+    // Al cambiar radio: limpiar todo y añadir sólo la nueva
+    removeAllLayerMarkers();
+    document.querySelectorAll('input[type="radio"]').forEach(r => {
+      if (r !== e.target) r.checked = false;
+    });
+  }
+
+  if (e.target.checked) {
+    const res = await fetch(`/data/${filename}`);
+    const data = await res.json();
+    const markers = getMarkersForGeoJSONLayer(data, filename);
+    geojsonLayers[filename] = markers;
+    clusterGroup.addLayers(markers);
+    markers.forEach(m => oms.addMarker(m));
+  } else {
+    removeLayerMarkers(filename);
+  }
 }
 
 // --- Fetch & Render Categories ---
@@ -139,7 +152,7 @@ export async function fetchAvailableLayers(category) {
     const res = await fetch(`/api/list_geojson.php?category=${encodeURIComponent(category)}`);
     const files = await res.json();
     if (Array.isArray(files)) {
-      updateLayerList(files);
+      updateLayerList(files, category);
     } else {
       console.error('Expected array of geojson files', files);
     }
