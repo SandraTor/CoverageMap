@@ -1,5 +1,5 @@
 // js/map.js
-import { gradientLegend } from './leafletGradientLegend.js';
+import { gradientLegend } from '../coverage/coverageLegend.js';
 import {fetchAvailableLayers} from './mapLayers.js'
 import { getColorByIntensidad } from './geojsonLoader.js';
 

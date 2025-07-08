@@ -1,5 +1,5 @@
 //leafletGradientLegend.js
-import { getColorByIntensidad , intensidadBreakpoints} from './geojsonLoader.js';
+import { getColorByIntensidad , intensidadBreakpoints} from '../map/geojsonLoader.js';
 
 export const gradientLegend = L.control({ position: 'bottomright' });
 
