@@ -1,9 +1,32 @@
 //mapLayers.js
 import { getMarkersForGeoJSONLayer } from './geojsonLoader.js';
-import { map, clusterGroup, oms } from './map.js';
+import { map, oms } from './map.js';
+import { clusterGroup } from './clusterConfig.js';
 const geojsonLayers = {}; // Guardar las capas por nombre
 let validFiles = [];
 let layerControlContainer = null;
+
+//Carga de frontera CyL desde WFS de IDECyL
+export function cargarFronteraCYL(map){
+  fetch('https://idecyl.jcyl.es/geoserver/limites/ows?service=WFS&version=1.0.0&request=GetFeature' +
+        '&typeName=limites:limites_cyl_autonomia' +
+        '&outputFormat=application/json' +
+        '&CQL_FILTER=n_auton=%27Castilla y León%27' + //filtro de servidor
+        '&srsName=EPSG:4326')
+    .then(res => res.json())
+    .then(data => {
+      const layer = L.geoJSON(data, {
+        style: {
+          color: '#FF6600',
+          weight: 1,
+          opacity: 1,
+          fill: false
+        }
+      }).addTo(map);
+
+      return layer;
+    });
+}
 
 // --- Helpers ---
 // Elimina los puntos de una capa en concreto
