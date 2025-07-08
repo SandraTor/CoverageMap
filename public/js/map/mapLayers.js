@@ -2,10 +2,17 @@
 import { getMarkersForGeoJSONLayer } from './geojsonLoader.js';
 import { map, oms } from './map.js';
 import { clusterGroup } from './clusterConfig.js';
+import { updateCoverageLegend } from '../coverage/coverageLegend.js';
+import { updateAirPollutionLegend, initAirPollutionLegend, hideAirPollutionLegend } from '../airPollution/airPollutionLegend.js';
+
 const geojsonLayers = {}; // Guardar las capas por nombre
 let validFiles = [];
 let layerControlContainer = null;
 
+document.addEventListener('DOMContentLoaded', () => {
+  initAirPollutionLegend();
+  // ...
+});
 //Carga de frontera CyL desde WFS de IDECyL
 export function cargarFronteraCYL(map){
   fetch('https://idecyl.jcyl.es/geoserver/limites/ows?service=WFS&version=1.0.0&request=GetFeature' +
@@ -90,6 +97,7 @@ export function updateLayerList(files, category) {
 async function changeHandler(e) {
   const filename = e.target.dataset.filename;
   const isRadio = e.target.type === 'radio';
+  const category = document.getElementById('categorySelect').value;
 
   if (isRadio) {
     // Al cambiar radio: limpiar todo y añadir sólo la nueva
@@ -100,7 +108,7 @@ async function changeHandler(e) {
   }
 
   if (e.target.checked) {
-    const res = await fetch(`/data/${filename}`);
+    const res = await fetch(`/data/${category}/${filename}`);
     const data = await res.json();
     const markers = getMarkersForGeoJSONLayer(data, filename);
     geojsonLayers[filename] = markers;
@@ -108,6 +116,15 @@ async function changeHandler(e) {
     markers.forEach(m => oms.addMarker(m));
   } else {
     removeLayerMarkers(filename);
+  }
+
+  if (category === 'air_pollution' && e.target.checked) {
+    updateAirPollutionLegend(filename);
+  } else {
+    // construye selectedLayers con checkboxes marcados
+    const selected = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+      .map(i => i.dataset.filename.replace(/\.geojson$/i, ''));
+    updateCoverageLegend(category, selected);
   }
 }
 
@@ -170,6 +187,8 @@ function handleRefreshLayers() {
   clearCheckboxes();
   if (category) fetchAvailableLayers(category);
   removeAllLayerMarkers();
+  updateCoverageLegend(sel.value, []);
+  hideAirPollutionLegend();
 }
 
 // Add refresh button once

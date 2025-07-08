@@ -9,7 +9,9 @@ export function getMarkersForGeoJSONLayer(data, layerName) {
   const markers = [];
   L.geoJSON(data, {
     pointToLayer: (feature, latlng) => {
-      const intensidad = parseFloat(feature.properties.Intensidad);
+      const props = feature.properties;
+      const intensidadKey = Object.keys(props).find(k => k.toLowerCase().startsWith('intensidad'));
+      const intensidad = intensidadKey ? parseFloat(props[intensidadKey]) : NaN;
       const color = getColorByIntensidad(intensidad);
       const marker = L.marker(latlng, { icon: createCircleIcon(color), intensidad });
       const date = feature.properties.date || feature.properties.fecha || feature.properties.Date || '';

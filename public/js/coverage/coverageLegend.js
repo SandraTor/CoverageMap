@@ -1,6 +1,10 @@
 //leafletGradientLegend.js
 import { getColorByIntensidad , intensidadBreakpoints} from './coverageStyler.js';
 
+import { hideAirPollutionLegend } from '../airPollution/airPollutionLegend.js';
+
+const coverageLegend = document.getElementById('coverageLegendContainer');
+
 export const gradientLegend = L.control({ position: 'bottomright' });
 
 gradientLegend.onAdd = function(map) {
@@ -88,3 +92,21 @@ gradientLegend.onAdd = function(map) {
 
   return div;
 };
+
+export function updateCoverageLegend(category, selectedLayers=[]) {
+  if (!coverageLegend) return;
+
+  if (category === 'air_pollution') {
+    coverageLegend.style.display = 'none';
+    hideAirPollutionLegend();
+    return;
+  }
+
+  // Mostrar leyenda cobertura
+  coverageLegend.style.display = 'block';
+  // Aquí va tu lógica actual de cobertura:
+  coverageLegend.innerHTML = selectedLayers
+    .map(name => `<div>${name}</div>`).join('') || '<div>Ninguna capa seleccionada</div>';
+
+  hideAirPollutionLegend();
+}

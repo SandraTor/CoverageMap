@@ -20,15 +20,17 @@ export function getColorByIntensidad(value) {
   Estilo con el que se dibujan los puntos
 */
 export function styleFeature(feature) {
-  const intensidad = parseFloat(feature.properties.Intensidad);
-  return {
-    radius: 6,
-    fillColor: getColorByIntensidad(intensidad),
-    color: '#333',
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 0.8
-  };
+    const props = feature.properties;
+    const intensidadKey = Object.keys(props).find(k => k.toLowerCase().startsWith('intensidad'));
+    const intensidad = intensidadKey ? parseFloat(props[intensidadKey]) : NaN;
+    return {
+        radius: 6,
+        fillColor: getColorByIntensidad(intensidad),
+        color: '#333',
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
 }
 
 /**
