@@ -6,13 +6,13 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -5.734615,
-          41.511599
+          -5.0,
+          53.2
         ]
       },
       "properties": {
-        "Marca temporal": "7/07/2025 10:50:07",
-        "Intensidad 4G": -96
+        "Marca temporal": "7/07/2025 11:33:01",
+        "Intensidad 5G": -101.0
       }
     }
   ]

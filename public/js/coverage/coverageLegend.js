@@ -1,14 +1,10 @@
-//leafletGradientLegend.js
-import { getColorByIntensidad , intensidadBreakpoints} from './coverageStyler.js';
-
-import { hideAirPollutionLegend } from '../airPollution/airPollutionLegend.js';
-
-const coverageLegend = document.getElementById('coverageLegendContainer');
+// coverageLegend.js
+import { getColorByIntensidad, intensidadBreakpoints } from './coverageStyler.js';
 
 export const gradientLegend = L.control({ position: 'bottomright' });
 
 gradientLegend.onAdd = function(map) {
-  const div = L.DomUtil.create('div', 'legend-gradient');
+  const div = L.DomUtil.create('div', 'legend');
 
   // Estilo
   div.style.background = 'white';
@@ -21,13 +17,13 @@ gradientLegend.onAdd = function(map) {
 
   // Title
   const title = document.createElement('div');
-  title.className = 'legend-title';
+  title.id = 'legend-title';
   title.innerHTML = '<strong>Intensidad (dBm)</strong>';
   div.appendChild(title);
 
   // Gradiente
   const gradientBar = document.createElement('div');
-  gradientBar.className = 'legend-gradient-bar';
+  gradientBar.className = 'legend-bar';
   gradientBar.style.marginBottom = '4px';
   const canvas = document.createElement('canvas');
   canvas.width = 200;
@@ -38,17 +34,15 @@ gradientLegend.onAdd = function(map) {
   // Labels
   const labels = document.createElement('div');
   labels.className = 'legend-labels';
+  labels.id = 'legend-labels'
   labels.style.position = 'relative';
   labels.style.fontSize = '12px';
   labels.style.marginTop = '2px';
   labels.style.height = '18px';
 
-  // Solo mostramos etiquetas/labels cuando se produce el cambio de color
-  //También en los extremos: máximo y mínimo
   const min = intensidadBreakpoints[intensidadBreakpoints.length - 1];
   const max = intensidadBreakpoints[0];
 
-  // Max izq, centrado al inicio del gradiente
   const maxLabel = document.createElement('span');
   maxLabel.innerText = max;
   maxLabel.style.position = 'absolute';
@@ -57,10 +51,8 @@ gradientLegend.onAdd = function(map) {
   maxLabel.style.whiteSpace = 'nowrap';
   labels.appendChild(maxLabel);
 
-  // Leyenda numérica en los cambios de color (Breakpoints)
   for (let i = 1; i < intensidadBreakpoints.length - 1; i++) {
     const bp = intensidadBreakpoints[i];
-    // Posición: % desde izq, relativo to min-max
     const percent = (max - bp) / (max - min);
     const label = document.createElement('span');
     label.innerText = bp;
@@ -71,7 +63,6 @@ gradientLegend.onAdd = function(map) {
     labels.appendChild(label);
   }
 
-  // Min a la derecha
   const minLabel = document.createElement('span');
   minLabel.innerText = min;
   minLabel.style.position = 'absolute';
@@ -81,8 +72,7 @@ gradientLegend.onAdd = function(map) {
   labels.appendChild(minLabel);
 
   div.appendChild(labels);
-
-  // Dibujo de la leyenda con gradiente usando getColorByIntensidad
+  
   const ctx = canvas.getContext('2d');
   for (let x = 0; x < canvas.width; x++) {
     const value = max - (x / (canvas.width - 1)) * (max - min);
@@ -93,20 +83,40 @@ gradientLegend.onAdd = function(map) {
   return div;
 };
 
-export function updateCoverageLegend(category, selectedLayers=[]) {
-  if (!coverageLegend) return;
+/**
+ * Función para redibujar el contenido del control gradientLegend
+ * @param {L.Map} map - instancia del mapa Leaflet
+ */
+export function redrawGradientLegend(map) {
+  if (!map) return;
 
-  if (category === 'air_pollution') {
-    coverageLegend.style.display = 'none';
-    hideAirPollutionLegend();
+  const container = gradientLegend.getContainer();
+
+  if (!container) {
+    // Si el control no está añadido, añadirlo
+    gradientLegend.addTo(map);
     return;
   }
 
-  // Mostrar leyenda cobertura
-  coverageLegend.style.display = 'block';
-  // Aquí va tu lógica actual de cobertura:
-  coverageLegend.innerHTML = selectedLayers
-    .map(name => `<div>${name}</div>`).join('') || '<div>Ninguna capa seleccionada</div>';
+  // Crear nuevo contenido
+  const newContent = gradientLegend.onAdd(map);
 
-  hideAirPollutionLegend();
+  // Limpiar contenido actual y añadir el nuevo
+  container.innerHTML = '';
+  container.appendChild(newContent);
+}
+
+/**
+ * Actualiza la leyenda de cobertura.
+ * @param {string} category - Categoría seleccionada.
+ * @param {string[]} selectedLayers - Capas seleccionadas.
+ * @param {L.Map} map - instancia del mapa Leaflet (para redibujar leyenda gradiente)
+ */
+export function updateCoverageLegend(category, selectedLayers = [], map) {
+  if (!coverageLegend) return;
+
+  coverageLegend.style.display = 'block';
+
+  // Redibujar la leyenda gradiente para reflejar el estado actualizado
+  redrawGradientLegend(map);
 }

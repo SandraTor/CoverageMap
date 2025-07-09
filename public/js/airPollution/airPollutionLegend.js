@@ -1,24 +1,17 @@
 // airPollutionLegend.js
 
-const legendContainer = document.getElementById('legend');
-const coverageLegend = document.getElementById('coverageLegendContainer');
 
-export function initAirPollutionLegend() {
-  const container = document.createElement('div');
-  container.id = 'airPollutionLegend';
-  container.style.display = 'none';
-  legendContainer.appendChild(container);
+
+export function updateAirPollutionLegend() {
+    const legendTitle = document.getElementById('legend-title');
+    const selectedRadio = document.querySelector('input[name="layer-radio"]:checked');
+    if (selectedRadio) {
+        const label = document.querySelector(`label[for="${selectedRadio.id}"]`);
+        if (label) {
+            legendTitle.textContent=label.textContent;
+        }
+    }
 }
-
-export function updateAirPollutionLegend(filename) {
-  const container = document.getElementById('airPollutionLegend');
-  coverageLegend.style.display = 'none'; // ocultamos leyenda cobertura
-  container.style.display = 'block';
-  // nombre legible
-  const pollutant = filename.replace(/\.geojson$/i, '').replace(/_/g, ' ');
-  container.innerHTML = `<strong>Contaminante:</strong> ${pollutant}`;
-}
-
 export function hideAirPollutionLegend() {
   const container = document.getElementById('airPollutionLegend');
   if (container) {

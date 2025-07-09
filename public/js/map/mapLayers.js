@@ -3,16 +3,12 @@ import { getMarkersForGeoJSONLayer } from './geojsonLoader.js';
 import { map, oms } from './map.js';
 import { clusterGroup } from './clusterConfig.js';
 import { updateCoverageLegend } from '../coverage/coverageLegend.js';
-import { updateAirPollutionLegend, initAirPollutionLegend, hideAirPollutionLegend } from '../airPollution/airPollutionLegend.js';
+import { updateAirPollutionLegend } from '../airPollution/airPollutionLegend.js';
 
 const geojsonLayers = {}; // Guardar las capas por nombre
 let validFiles = [];
 let layerControlContainer = null;
 
-document.addEventListener('DOMContentLoaded', () => {
-  initAirPollutionLegend();
-  // ...
-});
 //Carga de frontera CyL desde WFS de IDECyL
 export function cargarFronteraCYL(map){
   fetch('https://idecyl.jcyl.es/geoserver/limites/ows?service=WFS&version=1.0.0&request=GetFeature' +
@@ -119,7 +115,7 @@ async function changeHandler(e) {
   }
 
   if (category === 'air_pollution' && e.target.checked) {
-    updateAirPollutionLegend(filename);
+    updateAirPollutionLegend();
   } else {
     // construye selectedLayers con checkboxes marcados
     const selected = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
@@ -188,7 +184,6 @@ function handleRefreshLayers() {
   if (category) fetchAvailableLayers(category);
   removeAllLayerMarkers();
   updateCoverageLegend(sel.value, []);
-  hideAirPollutionLegend();
 }
 
 // Add refresh button once

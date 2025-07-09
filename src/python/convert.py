@@ -93,7 +93,7 @@ def main():
         # Preparamos las estructuras para las categoiras de datos 4g, 5g, and air pollution
         features_4g = {}
         features_5g = {}
-        pollution_types = ["PM 2.5", "PM 10", "CO", "CO2"]
+        pollution_types = ["Concentración PM 2.5", "Concentración PM 10", "Concentración CO", "Concentración CO2"]
         features_pollution = {ptype: [] for ptype in pollution_types}
 
         for idx, row in df.iterrows():
