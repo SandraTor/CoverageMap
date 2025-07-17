@@ -24,3 +24,39 @@ export function interpolateColor(value, min, max, colorMin, colorMax) {
   const b = Math.round(b1 + (b2 - b1) * ratio);
   return `rgb(${r},${g},${b})`;
 }
+
+/**
+ * Creates a custom circular div icon for Leaflet markers.
+ * @param {string} color - The fill color for the circle.
+ * @returns {L.DivIcon} - A Leaflet div icon representing a colored circle.
+ */
+export function createCircleIcon(color) {
+  return L.divIcon({
+    className: 'custom-circle-marker',
+    html: `<span style="
+      display: block;
+      width: 16px;
+      height: 16px;
+      background: ${color};
+      border: 2px solid #333;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      "></span>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+    popupAnchor: [0, -8]
+  });
+}
+
+export function formatearNombreCapa(filename) {
+  // Quitar la extensión .geojson
+  let nombre = filename.replace(/\.geojson$/i, '');
+
+  // Caso especial: PM_25 → PM 2.5
+  if (nombre === "Concentración_PM_25") return "Concentración PM 2.5";
+
+  // Reemplazar todos los guiones bajos por espacios
+  nombre = nombre.replace(/_/g, ' ');
+
+  return nombre;
+}

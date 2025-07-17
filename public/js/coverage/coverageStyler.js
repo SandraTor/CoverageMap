@@ -32,26 +32,3 @@ export function styleFeature(feature) {
         fillOpacity: 0.8
     };
 }
-
-/**
- * Creates a custom circular div icon for Leaflet markers.
- * @param {string} color - The fill color for the circle.
- * @returns {L.DivIcon} - A Leaflet div icon representing a colored circle.
- */
-export function createCircleIcon(color) {
-  return L.divIcon({
-    className: 'custom-circle-marker',
-    html: `<span style="
-      display: block;
-      width: 16px;
-      height: 16px;
-      background: ${color};
-      border: 2px solid #333;
-      border-radius: 50%;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      "></span>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
-    popupAnchor: [0, -8]
-  });
-}

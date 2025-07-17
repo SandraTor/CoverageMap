@@ -1,20 +1,22 @@
 //airPollutionStyler.js
 import { interpolateColor } from '../utils/helpers.js'
-export const concentracionBreakpoints = [
-  -70,   // Max (best signal)
-  -90,   // Green/Yellow
-  -100,  // Yellow/Orange
-  -110,  // Orange/Red
-  -130   // Min (worst signal)
-];
+export const concentracionBreakpoints = {
+  "Concentración PM 2.5": [0, 6, 16, 51, 91, 141, 150], //um/m3 EEA - Último valor a mano para leyenda
+  "Concentración PM 10": [0, 16, 46, 121, 196, 270, 300],//um/m3 EEA - Último valor a mano para leyenda
+  "Concentración CO": [0, 4.5, 9.5, 12.5, 15.5, 30.5, 40],//ppm airnow.gov EEUU - Último valor a mano para leyenda
+  "Concentración CO2": [0, 278, 421, 550, 601, 1001, 2000]
+};
 /*
   Calculo de color del punto según concentracion
 */
-export function getColorByConcentracion(value) {
-  if (value > concentracionBreakpoints[1]) return interpolateColor(value, concentracionBreakpoints[0], concentracionBreakpoints[1], '#27ae60', '#2ecc71');  // verde claro a verde
-  if (value > concentracionBreakpoints[2]) return interpolateColor(value, concentracionBreakpoints[1], concentracionBreakpoints[2], '#f1c40f', '#f39c12'); // amarillo oscuro a amarillo
-  if (value > concentracionBreakpoints[3]) return interpolateColor(value, concentracionBreakpoints[2], concentracionBreakpoints[3], '#e67e22', '#d35400'); // naranja oscuro a naranja
-  return interpolateColor(value, concentracionBreakpoints[3], concentracionBreakpoints[4], '#e74c3c', '#c0392b');                   // rojo oscuro a rojo
+export function getColorByConcentracion(value, contaminante) {
+  console.log("Contaminante recibido:", contaminante);
+  if (value <= concentracionBreakpoints[contaminante][1]) return interpolateColor(value, concentracionBreakpoints[contaminante][0], concentracionBreakpoints[contaminante][1], '#a8e6cf', '#009966');  // Verde
+  if (value <= concentracionBreakpoints[contaminante][2]) return interpolateColor(value, concentracionBreakpoints[contaminante][1], concentracionBreakpoints[contaminante][2], '#fff9b0', '#ffde33'); // Amarillo
+  if (value <= concentracionBreakpoints[contaminante][3]) return interpolateColor(value, concentracionBreakpoints[contaminante][2], concentracionBreakpoints[contaminante][3], '#ffd699', '#ff9933'); // Naranja
+  if (value <= concentracionBreakpoints[contaminante][4]) return interpolateColor(value, concentracionBreakpoints[contaminante][3], concentracionBreakpoints[contaminante][4], '#f8a37f', '#e74c3c'); // Rojo
+  if (value <= concentracionBreakpoints[contaminante][5]) return interpolateColor(value, concentracionBreakpoints[contaminante][4], concentracionBreakpoints[contaminante][5], '#d47db3', '#9b59b6'); // Morado
+  return interpolateColor(value, concentracionBreakpoints[contaminante][5], value, '#8e44ad', '#6c3483'); // Morado oscuro extendido
 }
 /*
   Estilo con el que se dibujan los puntos
@@ -25,33 +27,10 @@ export function styleFeature(feature) {
     const concentracion = concentracionKey ? parseFloat(props[concentracionKey]) : NaN;
     return {
         radius: 6,
-        fillColor: getColorByConcentracion(concentracion),
+        fillColor: getColorByConcentracion(concentracion, ""),
         color: '#333',
         weight: 1,
         opacity: 1,
         fillOpacity: 0.8
     };
-}
-
-/**
- * Creates a custom circular div icon for Leaflet markers.
- * @param {string} color - The fill color for the circle.
- * @returns {L.DivIcon} - A Leaflet div icon representing a colored circle.
- */
-export function createCircleIcon(color) {
-  return L.divIcon({
-    className: 'custom-circle-marker',
-    html: `<span style="
-      display: block;
-      width: 16px;
-      height: 16px;
-      background: ${color};
-      border: 2px solid #333;
-      border-radius: 50%;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      "></span>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
-    popupAnchor: [0, -8]
-  });
 }

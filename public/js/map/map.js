@@ -1,5 +1,5 @@
 // js/map.js
-import { gradientLegend } from '../coverage/coverageLegend.js';
+import { initCoverageLegend } from '../coverage/coverageLegend.js';
 import { clusterGroup } from './clusterConfig.js';
 import { cargarFronteraCYL } from './mapLayers.js'
 
@@ -60,7 +60,7 @@ map.addLayer(clusterGroup);
 
 window.map = map;
 window.layers = {};
-gradientLegend.addTo(map);
+initCoverageLegend(map); // Inicializa directamente con valores de cobertura
 
 // Robust OMS constructor detection
 let OMSConstructor = null;

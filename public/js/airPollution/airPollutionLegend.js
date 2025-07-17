@@ -1,20 +1,21 @@
 // airPollutionLegend.js
+import { initLegend, updateLegend } from '../utils/legendGenerator.js';
+import { getColorByConcentracion, concentracionBreakpoints } from './airPollutionStyler.js';
 
-
-
-export function updateAirPollutionLegend() {
-    const legendTitle = document.getElementById('legend-title');
-    const selectedRadio = document.querySelector('input[name="layer-radio"]:checked');
-    if (selectedRadio) {
-        const label = document.querySelector(`label[for="${selectedRadio.id}"]`);
-        if (label) {
-            legendTitle.textContent=label.textContent;
-        }
-    }
+export function initCoverageLegend(map) {
+  initLegend(map, {
+    titleText: 'Intensidad (dBm)',
+    breakpoints: concentracionBreakpoints,
+    getColor: getColorByConcentracion(value, "")
+  });
 }
-export function hideAirPollutionLegend() {
-  const container = document.getElementById('airPollutionLegend');
-  if (container) {
-    container.style.display = 'none';
-  }
+
+export function updateAirPollutionLegend(map, contaminante) {
+  console.log("Contaminante recibido:", contaminante);
+  updateLegend({
+    titleText: contaminante,
+    breakpoints: concentracionBreakpoints[contaminante],
+    getColor: (value, contaminante) => getColorByConcentracion(value, contaminante),
+    contaminante: contaminante
+  });
 }

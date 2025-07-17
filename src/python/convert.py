@@ -97,7 +97,7 @@ def main():
         features_pollution = {ptype: [] for ptype in pollution_types}
 
         for idx, row in df.iterrows():
-            operador = str(row["OPERADOR"]).strip()
+            operador = str(row["OPERADOR"]).strip().upper() #normalizamos a mayusculas los operadores
             coords = parse_coordinates(row["LOCALIZACION"], operador)
             if not coords:
                 continue

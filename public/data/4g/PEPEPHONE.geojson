@@ -6,6 +6,34 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -5.7247169,
+          41.4938978
+        ]
+      },
+      "properties": {
+        "Marca temporal": "28/05/2025 13:25:25",
+        "Intensidad 4G": -98
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.7442304,
+          41.5039488
+        ]
+      },
+      "properties": {
+        "Marca temporal": "6/06/2025 12:10:16",
+        "Intensidad 4G": -116
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -5.734615,
           41.511599
         ]
@@ -13,6 +41,48 @@
       "properties": {
         "Marca temporal": "7/07/2025 10:50:07",
         "Intensidad 4G": -96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7032905,
+          40.4167279
+        ]
+      },
+      "properties": {
+        "Marca temporal": "7/07/2025 10:58:41",
+        "Intensidad 4G": -95
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7032905,
+          40.4167279
+        ]
+      },
+      "properties": {
+        "Marca temporal": "7/07/2025 11:07:19",
+        "Intensidad 4G": -96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -5.734615,
+          41.511599
+        ]
+      },
+      "properties": {
+        "Marca temporal": "7/07/2025 11:09:32",
+        "Intensidad 4G": -98
       }
     }
   ]

@@ -54,6 +54,24 @@ set_time_limit(0); // Desactiva el límite de tiempo de ejecución
 $dataDir = __DIR__ . '/../../data/';
 $lastModifiedTimes = [];
 
+function getGeojsonFilesRecursive($dir) {
+    $geojsonFiles = [];
+    $items = scandir($dir);
+
+    foreach ($items as $item) {
+        if ($item === '.' || $item === '..') continue;
+        $path = $dir . DIRECTORY_SEPARATOR . $item;
+
+        if (is_dir($path)) {
+            $geojsonFiles = array_merge($geojsonFiles, getGeojsonFilesRecursive($path));
+        } elseif (pathinfo($path, PATHINFO_EXTENSION) === 'geojson') {
+            $geojsonFiles[] = $path;
+        }
+    }
+
+    return $geojsonFiles;
+}
+
 while (true) {
     if (connection_aborted()) {
         exit(); // Salir si el cliente cierra la conexión
@@ -62,7 +80,7 @@ while (true) {
     clearstatcache();
     $changedFiles = [];
 
-    $files = glob($dataDir . '*.geojson');
+    $files = getGeojsonFilesRecursive($dataDir);
     foreach ($files as $file) {
         $filename = basename($file);
         $modified = filemtime($file);

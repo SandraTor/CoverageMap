@@ -6,6 +6,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -5.734615,
+          41.511599
+        ]
+      },
+      "properties": {
+        "Marca temporal": "7/07/2025 10:50:07",
+        "Intensidad 5G": -97.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -3.7032905,
           40.4167279
         ]
@@ -40,7 +54,7 @@
       },
       "properties": {
         "Marca temporal": "7/07/2025 11:09:32",
-        "Intensidad 5G": -100.0
+        "Intensidad 5G": -99.0
       }
     }
   ]

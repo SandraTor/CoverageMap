@@ -4,6 +4,7 @@ import { map, oms } from './map.js';
 import { clusterGroup } from './clusterConfig.js';
 import { updateCoverageLegend } from '../coverage/coverageLegend.js';
 import { updateAirPollutionLegend } from '../airPollution/airPollutionLegend.js';
+import { formatearNombreCapa } from '../utils/helpers.js'
 
 const geojsonLayers = {}; // Guardar las capas por nombre
 let validFiles = [];
@@ -75,7 +76,13 @@ export function updateLayerList(files, category) {
 
     const label = document.createElement('label');
     label.htmlFor = input.id;
-    label.textContent = file.replace(/\.geojson$/i, '');
+    let nombreCapa = file.replace(/\.geojson$/i, '');
+
+    if (nombreCapa === "Concentración_PM_25") {
+      label.textContent = "Concentración PM 2.5";
+    } else {
+      label.textContent = nombreCapa.replace(/_/g, ' ');
+    }
 
     const row = document.createElement('div');
     row.append(input, label);
@@ -106,7 +113,11 @@ async function changeHandler(e) {
   if (e.target.checked) {
     const res = await fetch(`/data/${category}/${filename}`);
     const data = await res.json();
-    const markers = getMarkersForGeoJSONLayer(data, filename);
+
+    // Formatear nombre limpio para lógica y visualización
+    const nombreFormateado = formatearNombreCapa(filename);
+    const markers = getMarkersForGeoJSONLayer(data, nombreFormateado);
+    console.log("getMarkersForGeoJSONLayer(data, filename);", filename);
     geojsonLayers[filename] = markers;
     clusterGroup.addLayers(markers);
     markers.forEach(m => oms.addMarker(m));
@@ -115,12 +126,13 @@ async function changeHandler(e) {
   }
 
   if (category === 'air_pollution' && e.target.checked) {
-    updateAirPollutionLegend();
+    const selectedRadio = document.querySelector('input[name="layer-radio"]:checked');
+    const label = document.querySelector(`label[for="${selectedRadio?.id}"]`);
+    const labelText = label?.textContent; //es lo mismo que (label !== null && label !== undefined) ? label.textContent : undefined;
+    console.log("Contaminante recibido:", labelText);
+    updateAirPollutionLegend(map, labelText);
   } else {
-    // construye selectedLayers con checkboxes marcados
-    const selected = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-      .map(i => i.dataset.filename.replace(/\.geojson$/i, ''));
-    updateCoverageLegend(category, selected);
+    updateCoverageLegend(map);
   }
 }
 
