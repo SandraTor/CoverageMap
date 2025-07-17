@@ -27,9 +27,7 @@ export function updateLegend(config) {
 }
 
 function createGradientLegend({ titleText, breakpoints, getColor, contaminante }) {
-
-  // Contenedor principal con clase legend
-  const legendContainer = document.createDocumentFragment('div');
+  const legendContainer = document.createDocumentFragment();
 
   // Título
   const title = document.createElement('div');
@@ -40,16 +38,65 @@ function createGradientLegend({ titleText, breakpoints, getColor, contaminante }
   const min = breakpoints[0];
   const max = breakpoints[breakpoints.length - 1];
 
+  // Configuración de espaciado
+  const minSegmentWidth = 20; // Ancho mínimo por segmento en píxeles
+  const maxSegmentWidth = 60; // Ancho máximo por segmento en píxeles
+  const numSegments = breakpoints.length - 1;
+
+  // Calcular los anchos proporcionales originales
+  const totalRange = max - min;
+  const originalWidths = [];
+  let totalProportionalWidth = 0;
+  
+  for (let i = 0; i < numSegments; i++) {
+    const segmentRange = breakpoints[i + 1] - breakpoints[i];
+    const proportionalWidth = (segmentRange / totalRange) * 200; // Base de 200px
+    originalWidths.push(proportionalWidth);
+    totalProportionalWidth += proportionalWidth;
+  }
+
+  // Ajustar anchos aplicando límites mín/máx
+  const adjustedWidths = [];
+  let totalAdjustedWidth = 0;
+  
+  for (let i = 0; i < numSegments; i++) {
+    let adjustedWidth = originalWidths[i];
+    
+    // Aplicar límites
+    if (adjustedWidth < minSegmentWidth) {
+      adjustedWidth = minSegmentWidth;
+    } else if (adjustedWidth > maxSegmentWidth) {
+      adjustedWidth = maxSegmentWidth;
+    }
+    
+    adjustedWidths.push(adjustedWidth);
+    totalAdjustedWidth += adjustedWidth;
+  }
+
+  // El ancho total del canvas será la suma de los anchos ajustados
+  const canvasWidth = Math.max(120, Math.min(300, totalAdjustedWidth));
+
   // Contenedor principal
   const wrapper = document.createElement('div');
   wrapper.className = 'legend-gradient-container';
+  wrapper.style.width = `${canvasWidth}px`;
 
   // Canvas de gradiente
   const canvas = document.createElement('canvas');
-  canvas.width = 150;
+  canvas.width = canvasWidth;
   canvas.height = 16;
   canvas.className = 'legend-gradient-canvas';
+  canvas.style.width = `${canvasWidth}px`;
   wrapper.appendChild(canvas);
+
+  // Calcular posiciones acumulativas para ticks y etiquetas
+  const positions = [0]; // Posición inicial
+  let accumulatedWidth = 0;
+  
+  for (let i = 0; i < adjustedWidths.length; i++) {
+    accumulatedWidth += adjustedWidths[i];
+    positions.push(accumulatedWidth);
+  }
 
   // Línea horizontal con marcas (ticks)
   const lineWrapper = document.createElement('div');
@@ -59,9 +106,9 @@ function createGradientLegend({ titleText, breakpoints, getColor, contaminante }
   line.className = 'legend-line';
   lineWrapper.appendChild(line);
 
-  // Añadir ticks
-  breakpoints.forEach((bp) => {
-    const percent = ((bp - min) / (max - min)) * 100;
+  // Añadir ticks basados en las posiciones calculadas
+  positions.forEach((pos, index) => {
+    const percent = (pos / canvasWidth) * 100;
 
     const tick = document.createElement('div');
     tick.className = 'legend-tick';
@@ -69,7 +116,7 @@ function createGradientLegend({ titleText, breakpoints, getColor, contaminante }
     lineWrapper.appendChild(tick);
   });
 
-  // Etiquetas min y max dentro del mismo contenedor de la línea
+  // Etiquetas min y max
   const minLabel = document.createElement('span');
   minLabel.innerText = min;
   minLabel.className = 'legend-minmax legend-minmax-left';
@@ -87,12 +134,11 @@ function createGradientLegend({ titleText, breakpoints, getColor, contaminante }
   labels.className = 'legend-labels';
 
   for (let i = 1; i < breakpoints.length - 1; i++) {
-    const bp = breakpoints[i];
-    const percent = ((bp - min) / (max - min)) * 100;
+    const percent = (positions[i] / canvasWidth) * 100;
 
     const label = document.createElement('span');
     label.className = 'legend-label';
-    label.innerText = bp;
+    label.innerText = breakpoints[i];
     label.style.left = `${percent}%`;
 
     labels.appendChild(label);
@@ -101,11 +147,35 @@ function createGradientLegend({ titleText, breakpoints, getColor, contaminante }
   wrapper.appendChild(labels);
   legendContainer.appendChild(wrapper);
 
-
-  // Pintar gradiente (manteniendo la coherencia con los nuevos valores)
+  // Pintar gradiente respetando los anchos ajustados
   const ctx = canvas.getContext('2d');
+  
   for (let x = 0; x < canvas.width; x++) {
-    const value = min + (x / (canvas.width - 1)) * (max - min);
+    // Determinar en qué segmento estamos
+    let segmentIndex = 0;
+    let segmentStartX = 0;
+    
+    for (let i = 0; i < adjustedWidths.length; i++) {
+      const segmentEndX = segmentStartX + (adjustedWidths[i] / canvasWidth) * canvas.width;
+      
+      if (x >= segmentStartX && x < segmentEndX) {
+        segmentIndex = i;
+        break;
+      }
+      
+      segmentStartX = segmentEndX;
+    }
+    
+    // Calcular la posición relativa dentro del segmento
+    const segmentWidth = (adjustedWidths[segmentIndex] / canvasWidth) * canvas.width;
+    const relativeX = x - segmentStartX;
+    const relativePos = segmentWidth > 0 ? relativeX / segmentWidth : 0;
+    
+    // Interpolar el valor dentro del segmento
+    const startValue = breakpoints[segmentIndex];
+    const endValue = breakpoints[segmentIndex + 1];
+    const value = startValue + (endValue - startValue) * relativePos;
+    
     let color;
     try {
       color = getColor.length === 2
