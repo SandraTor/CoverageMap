@@ -9,37 +9,16 @@
   <link rel="shortcut icon" href="/favicon/favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
   <link rel="manifest" href="/favicon/site.webmanifest" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-  <link rel="stylesheet" href="css/map.css" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div id="header"><!-- Header content will be loaded here --></div>
-  <div id="nav"><!-- Nav content will be loaded here --></div>
+  <div id="header"></div>
+  <div id="nav"></div>
 
-  <div id="map" style="min-height: 65vh; width: 100%;">
-    <div id="layerControl">  <!-- Checkboxes de control de layers -->
-      <select id="categorySelect">
-      </select>
-      <div id="legend"></div> 
-    </div>
+  <div id="imagen" style="min-height: 65vh; width: 100%;">
+   <p>"Aquí irá la imagen de cabecera con 3 o 4 frases descriptivas del proyecto"</p>
   </div>
-  <div id="footer"><!-- Footer content will be loaded here --></div>
-  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>-->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier-Leaflet/0.2.6/oms.min.js"></script>
-    <!-- In your HTML, before your JS modules -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-   
-  <script type="module">
-    import './js/map/map.js';
-    import './js/map/mapLayers.js';
-  </script>
-  <script type="module" src="./js/sseHandler.js"></script>
+  <div id="footer"></div>
   <!-- Scripts plantilla base -->
   <script src="js/main.js"></script>
   <script src="js/components/menu-toggle.js"></script>

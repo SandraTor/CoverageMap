@@ -79,14 +79,14 @@ function createGradientLegend({ titleText, breakpoints, getColor, contaminante }
   // Contenedor principal
   const wrapper = document.createElement('div');
   wrapper.className = 'legend-gradient-container';
-  wrapper.style.width = `${canvasWidth}px`;
+  wrapper.style.width = "100%"
 
   // Canvas de gradiente
   const canvas = document.createElement('canvas');
   canvas.width = canvasWidth;
   canvas.height = 16;
   canvas.className = 'legend-gradient-canvas';
-  canvas.style.width = `${canvasWidth}px`;
+  canvas.style.width = "100%";
   wrapper.appendChild(canvas);
 
   // Calcular posiciones acumulativas para ticks y etiquetas

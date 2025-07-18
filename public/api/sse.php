@@ -8,3 +8,4 @@ header('Connection: keep-alive');
 
 // Ruta absoluta desde el proxy hasta el backend (src)
 require_once realpath(__DIR__ . '/../../src/php/sse.php');
+?>
